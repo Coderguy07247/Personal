@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    gap: 20px;
+    padding-bottom: 400px;
+    box-sizing: border-box;
+}
+
+.timer-box {
+    width: 400px;
+    height: 200px;
+    border-radius: 50px;
+    background-color: rgb(147, 182, 194);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: arial, sans-serif;
+    font-size: 75px;
+}
+
+.title-text {
+    font-size: 67px;
+    font-family: arial, sans sarif;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.Startbtn {
+    background-color: rgb(147, 182, 194);
+    border-radius: 0px;
+}
+
+.Pausebtn {
+    background-color: rgb(147, 182, 194);
+    border-radius: 0px;
+}
+
+.Endbtn {
+    background-color: rgb(147, 182, 194);
+    border-radius: 0px;
+}
