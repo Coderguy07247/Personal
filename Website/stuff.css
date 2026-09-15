@@ -1,50 +1,73 @@
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: #f4f6f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     gap: 20px;
-    padding-bottom: 400px;
-    box-sizing: border-box;
+}
+
+.nav-link, .back-link {
+    display: inline-block;
+    padding: 10px 18px;
+    background-color: #ffffff;
+    color: #4a6b82;
+    border: 2px solid #93b6c2;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover, .back-link:hover {
+    background-color: #93b6c2;
+    color: white;
+}
+
+.title-text {
+    font-size: 48px;
+    font-weight: 700;
+    color: #333333;
 }
 
 .timer-box {
-    width: 400px;
-    height: 200px;
-    border-radius: 50px;
-    background-color: rgb(147, 182, 194);
+    width: 320px;
+    height: 160px;
+    border-radius: 24px;
+    background-color: #93b6c2;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: arial, sans-serif;
-    font-size: 75px;
-}
-
-.title-text {
-    font-size: 67px;
-    font-family: arial, sans sarif;
+    font-size: 64px;
+    font-weight: bold;
+    box-shadow: 0 8px 20px rgba(147, 182, 194, 0.3);
 }
 
 .btn-group {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
-.Startbtn {
-    background-color: rgb(147, 182, 194);
-    border-radius: 0px;
+button {
+    background-color: #93b6c2;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.Pausebtn {
-    background-color: rgb(147, 182, 194);
-    border-radius: 0px;
+button:hover {
+    background-color: #7da5b3;
 }
 
-.Endbtn {
-    background-color: rgb(147, 182, 194);
-    border-radius: 0px;
+button:active {
+    transform: scale(0.98);
 }

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study App - Timer & Flashcards</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Tab Navigation */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .tab-btn {
+      padding: 10px 24px;
+      background-color: #ffffff;
+      color: #4a6b82;
+      border: 2px solid #93b6c2;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background-color: #93b6c2;
+      color: #ffffff;
+    }
+
+    /* Container Card */
+    .app-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 550px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .tab-content {
+      display: none;
+      width: 100%;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-size: 32px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button.action-btn {
+      background-color: #93b6c2;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    button.action-btn:hover {
+      background-color: #7da5b3;
+    }
+
+    button.action-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Timer Styles */
+    .timer-box {
+      width: 100%;
+      max-width: 360px;
+      height: 160px;
+      border-radius: 24px;
+      background-color: #93b6c2;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 64px;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(147, 182, 194, 0.3);
+      margin: 20px 0 30px 0;
+    }
+
+    /* Flashcard Styles */
+    .input-section {
+      width: 100%;
+      text-align: left;
+    }
+
+    .input-section label {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea:focus {
+      border-color: #93b6c2;
+    }
+
+    .card-container {
+      perspective: 1000px;
+      margin: 20px 0;
+      width: 100%;
+      height: 220px;
+      cursor: pointer;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      font-size: 20px;
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .front {
+      background-color: #93b6c2;
+      color: white;
+    }
+
+    .back {
+      background-color: #2c3e50;
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    .progress {
+      font-size: 14px;
+      font-weight: 600;
+      color: #888888;
+      margin-top: 10px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mode Switcher Tabs -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab(event, 'timer-tab')">Timer</button>
+    <button class="tab-btn" onclick="switchTab(event, 'flashcard-tab')">Flashcard Maker</button>
+  </div>
+
+  <div class="app-card">
+    
+    <!-- TIMER SECTION -->
+    <div id="timer-tab" class="tab-content active">
+      <h1>Timer</h1>
+      <div class="timer-box" id="timer-display">25:00</div>
+      <div class="btn-group">
+        <button class="action-btn" onclick="startTimer()">Start</button>
+        <button class="action-btn" onclick="pauseTimer()">Pause</button>
+        <button class="action-btn" onclick="resetTimer()">Reset</button>
+        <button class="action-btn" onclick="endTimer()">End Early</button>
+      </div>
+    </div>
+
+    <!-- FLASHCARD SECTION -->
+    <div id="flashcard-tab" class="tab-content">
+      <h1>Flashcard Maker</h1>
+
+      <div class="input-section">
+        <label for="paste-input">Paste terms and definitions (e.g. <code>Term - Definition</code> or <code>Term: Definition</code>):</label>
+        <textarea id="paste-input" placeholder="Mitochondria - Powerhouse of the cell&#10;Photosynthesis : Process of converting light into energy&#10;Osmosis	Movement of water molecules"></textarea>
+        <button class="action-btn" style="width: 100%; margin-top: 10px;" onclick="generateDeck()">Generate Deck</button>
+      </div>
+
+      <div id="study-area" class="study-area hidden" style="width: 100%;">
+        <div class="progress" id="progress-text">Card 1 of 1</div>
+
+        <div class="card-container" onclick="flipCard()">
+          <div class="card" id="card">
+            <div class="card-face front" id="card-front">Front</div>
+            <div class="card-face back" id="card-back">Back</div>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button class="action-btn" onclick="prevCard()">Previous</button>
+          <button class="action-btn" onclick="flipCard()">Flip</button>
+          <button class="action-btn" onclick="nextCard()">Next</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab Switching Logic
+    function switchTab(e, tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      e.currentTarget.classList.add('active');
+    }
+
+    // Timer Logic
+    const INITIAL_TIME = 1500;
+    let seconds = INITIAL_TIME;
+    let timerId = null;
+    const timerDisplay = document.getElementById("timer-display");
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      if (timerId !== null) return;
+      timerId = setInterval(() => {
+        if (seconds > 0) {
+          seconds--;
+          updateTimerDisplay();
+        } else {
+          pauseTimer();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerId);
+      timerId = null;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      seconds = INITIAL_TIME;
+      updateTimerDisplay();
+    }
+
+    function endTimer() {
+      pauseTimer();
+      seconds = 0;
+      updateTimerDisplay();
+    }
+
+    // Flashcard Logic
+    let deck = [];
+    let currentIndex = 0;
+
+    const card = document.getElementById("card");
+    const cardFront = document.getElementById("card-front");
+    const cardBack = document.getElementById("card-back");
+    const progressText = document.getElementById("progress-text");
+    const studyArea = document.getElementById("study-area");
+
+    function generateDeck() {
+      const text = document.getElementById("paste-input").value.trim();
+      if (!text) {
+        alert("Please paste some terms and definitions first.");
+        return;
+      }
+
+      const lines = text.split("\n");
+      deck = [];
+
+      lines.forEach((line) => {
+        const parts = line.split(/\t| - | : | = |:|-|=/);
+        if (parts.length >= 2) {
+          const term = parts[0].trim();
+          const definition = parts.slice(1).join("-").trim();
+          if (term && definition) {
+            deck.push({ term, definition });
+          }
+        }
+      });
+
+      if (deck.length === 0) {
+        alert("Could not detect term and definition pairs. Try using hyphen '-' or colon ':' to separate them.");
+        return;
+      }
+
+      currentIndex = 0;
+      studyArea.classList.remove("hidden");
+      showCard(currentIndex);
+    }
+
+    function showCard(index) {
+      card.classList.remove("flipped");
+      setTimeout(() => {
+        cardFront.textContent = deck[index].term;
+        cardBack.textContent = deck[index].definition;
+        progressText.textContent = `Card ${index + 1} of ${deck.length}`;
+      }, 150);
+    }
+
+    function flipCard() {
+      card.classList.toggle("flipped");
+    }
+
+    function prevCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        showCard(currentIndex);
+      }
+    }
+
+    function nextCard() {
+      if (currentIndex < deck.length - 1) {
+        currentIndex++;
+        showCard(currentIndex);
+      }
+    }
+  </script>
+</body>
+</html>

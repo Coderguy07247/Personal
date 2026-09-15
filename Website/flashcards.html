@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcard Maker</title>
+  <link rel="stylesheet" href="flashcards.css" />
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-link">&larr; Back to Timer</a>
+    <h1>Flashcard Maker</h1>
+
+    <!-- Paste Input Section -->
+    <div class="input-section">
+      <label for="paste-input">Paste terms and definitions (e.g., <code>Term - Definition</code> or <code>Term: Definition</code>):</label>
+      <textarea id="paste-input" placeholder="Mitochondria - Powerhouse of the cell&#10;Photosynthesis : Process of converting light to energy&#10;Osmosis	Movement of water molecules"></textarea>
+      <button id="generate-btn">Generate Deck</button>
+    </div>
+
+    <!-- Study Interface -->
+    <div id="study-area" class="study-area hidden">
+      <div class="progress" id="progress-text">Card 1 of 1</div>
+
+      <!-- Flashcard Element -->
+      <div class="card-container" id="card-container">
+        <div class="card" id="card">
+          <div class="card-face front" id="card-front">Front</div>
+          <div class="card-face back" id="card-back">Back</div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button id="prev-btn">Previous</button>
+        <button id="flip-btn">Flip</button>
+        <button id="next-btn">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="flashcards.js"></script>
+</body>
+</html>
